@@ -1,50 +1,31 @@
-# Welcome to your Expo app 👋
+# Лабораторна робота №8: 
+Налаштування пуш-сповіщень у мобільному застосунку
+Цей мобільний додаток є менеджером завдань (To-Do List) із вбудованою системою відкладених нагадувань, розробленим на React Native за допомогою Expo. Основна мета роботи полягала в інтеграції хмарних сервісів Firebase та OneSignal для реалізації механізму надсилання пуш-сповіщень користувачу в заданий час.
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Для запуску проєкту необхідно виконати команду npm install для встановлення базових залежностей та бібліотек react-native-onesignal і @react-native-community/datetimepicker. Після завершення конфігурації файлу app.json (додавання App ID та REST API Key), локальний сервер запускається командою npx expo start. Оскільки робота з пуш-сповіщеннями та нативними модулями OneSignal потребує компіляції нативного коду, запуск здійснюється через команду npx expo run:android, що дозволяє створити повноцінну налагоджувальну збірку.
 
-## Get started
+### Вигляд додатку:
+<img width="626" height="1280" alt="image" src="https://github.com/user-attachments/assets/988a5e4d-910f-4e4f-9b85-1900e2daa423" />
 
-1. Install dependencies
+### Отримане сповіщення:
+<img width="1080" height="313" alt="image" src="https://github.com/user-attachments/assets/9aab8517-c0e3-4c67-a9e9-690d710f263c" />
 
-   ```bash
-   npm install
-   ```
+### Адмін панелі Firebase і OneSignal:
+<img width="1446" height="806" alt="image" src="https://github.com/user-attachments/assets/d6fbfafe-5068-4516-86e5-911ce262847d" />
+<img width="1115" height="633" alt="image" src="https://github.com/user-attachments/assets/8a31b3c3-9a4b-4032-8da9-7d8c17ae522b" />
 
-2. Start the app
 
-   ```bash
-   npx expo start
-   ```
+Під час виконання роботи було реалізовано функціонал створення нових завдань із назвою та детальним описом. Ключовою особливістю додатка є використання компонента DateTimePicker для вибору конкретної дати та години нагадування. Завдяки інтеграції з OneSignal REST API, кожна нова задача автоматично планує відкладене сповіщення на сервері. Також було додано можливість видалення завдань: при видаленні об'єкта зі списку програма автоматично надсилає запит на скасування запланованого сповіщення за його унікальним ідентифікатором. Весь інтерфейс виконано у світлому мінімалістичному стилі з використанням карток завдань для зручності візуального сприйняття.
+Найбільш стабільним способом тестування виявився запуск на фізичному Android-пристрої через USB-кабель, оскільки це дозволяє перевірити реальну доставку сповіщень у фоновому режимі та в режимі "foreground" (коли додаток відкрито). Використання консолі Firebase допомогло налаштувати канал передачі даних (FCM), а панель керування OneSignal дозволила в реальному часі відстежувати статус кожного запланованого повідомлення та активність підписаних пристроїв.
 
-In the output, you'll find options to open the app in a
+Що таке push-сповіщення і як воно працює?
+Це короткі інформаційні повідомлення, які надсилаються сервером на мобільний пристрій користувача. Кожен пристрій отримує унікальний токен, за яким сервер розсилки (через посередників на кшталт OneSignal) ідентифікує отримувача та передає дані на смартфон, навіть якщо додаток не запущено.
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+Яка роль Firebase Cloud Messaging у потоці надсилання повідомлень?
+FCM виступає основним транспортним вузлом для Android. Він приймає запити від розробника (або сервісу OneSignal) і безпосередньо взаємодіє з операційною системою Android для доставки та відображення сповіщення на екрані.
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+Як запланувати та скасувати сповіщення через OneSignal API?
+Для планування використовується HTTP-запит POST до API OneSignal із параметром send_after, де вказується час у форматі ISO. Для скасування надсилається запит DELETE із вказанням конкретного notification_id, який було отримано під час створення нагадування.
 
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
-```
-
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+Як обробляти push-сповіщення коли застосунок відкрито (foreground)?
+Для цього використовується спеціальний слухач подій SDK OneSignal — foregroundWillDisplay. Він дозволяє перехопити сповіщення в момент надходження та примусово відобразити його через метод event.notification.display(), що важливо для сповіщення користувача під час активної роботи з додатком.
