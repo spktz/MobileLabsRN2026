@@ -1,50 +1,28 @@
-# Welcome to your Expo app 👋
+# Лабораторна робота №5
+Цей мобільний додаток є навчальним онлайн-магазином музичних інструментів, розробленим на React Native з використанням бібліотеки Expo Router. Головна особливість проєкту - реалізація навігації на основі файлової структури та управління доступом користувачів. У додатку можна переглянути каталог професійного обладнання: від легендарних електрогітар Fender до сучасних барабанних установок Roland.
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Для запуску проєкту необхідно завантажити репозиторій та виконати команду npm install, щоб встановити всі необхідні бібліотеки для навігації та роботи з контекстом. Після цього сервер запускається командою npx expo start. Оскільки додаток використовує систему маршрутизації Expo Router, важливо переконатися, що папка app містить усі необхідні файли макетів. Для перевірки роботи на смартфоні достатньо відсканувати QR-код через додаток Expo Go, а для запуску на комп'ютері натиснути клавішу "a" для Android-емулятора.
 
-## Get started
+### Вигляд додатку:
+<img width="626" height="1280" alt="image" src="https://github.com/user-attachments/assets/8559de64-7ef9-4dce-8a6a-4fbc551dba86" />
+<img width="626" height="1280" alt="image" src="https://github.com/user-attachments/assets/216c0deb-dc76-4444-8f71-59993ba06b33" />
+<img width="626" height="1280" alt="image" src="https://github.com/user-attachments/assets/422ec56e-fd63-4faf-b386-0d6592380c3b" />
 
-1. Install dependencies
 
-   ```bash
-   npm install
-   ```
+Під час виконання роботи було реалізовано систему авторизації, яка захищає приватні дані користувача. Якщо людина не увійшла в акаунт, додаток автоматично перенаправляє її на сторінку логіну. Також було створено динамічний каталог товарів, де натискання на будь-який інструмент відкриває окрему сторінку з його детальним описом, ціною та зображенням. Весь стан авторизації (чи залогінений користувач) зберігається у глобальному контексті, що дозволяє легко виходити з акаунту або перевіряти доступ з будь-якої частини програми.
 
-2. Start the app
+Контрольні запитання:
+1. Яким чином за допомогою Expo Router реалізується перенаправлення неавторизованого користувача?
+Це робиться через файл макета _layout.jsx. Ми перевіряємо спеціальну змінну, яка каже, чи зайшов користувач. Якщо ні — ми повертаємо компонент який автоматично викидає користувача на сторінку входу.
 
-   ```bash
-   npx expo start
-   ```
+2. У чому полягає різниця між використанням компонента <Link> та метода router.push()?
+Компонент <Link> схожий на звичайне посилання на сайті - ти просто тиснеш на текст і переходиш. А router.push() - це команда, яку ми пишемо в коді. Вона потрібна, коли ми хочемо перейти на інший екран не просто за кліком, а після якоїсь дії, наприклад, після того, як натиснули кнопку "Увійти" і перевірили дані.
 
-In the output, you'll find options to open the app in a
+3. Як працюють динамічні маршрути в Expo Router і як отримати передані параметри?
+Динамічні маршрути — це файли з назвами в квадратних дужках, наприклад [id].jsx. Це дозволяє відкривати одну й ту саму сторінку для різних товарів.
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+5. Чому стан авторизації доцільно зберігати у глобальному контексті (React Context), а не в локальному стані компонента?
+Тому що інформація про те, чи залогінений користувач, потрібна всьому додатку одночасно. Якщо зберігати це в одному компоненті, то інші екрани не будуть знати про вхід. Глобальний контекст робить ці дані доступнимми всюди.
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
-```
-
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+6. Для чого використовуються групи маршрутів (folderName) і як вони впливають на URL-адресу?
+Групи маршрутів потрібні, щоб логічно розділити додаток — наприклад, окремо екрани для входу і окремо основний каталог. На саму URL-адресу вони ніяк не впливають, тобто назва папки в дужках просто ігнорується, що робить посилання короткими.
